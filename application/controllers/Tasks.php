@@ -13,10 +13,84 @@ class Tasks extends CI_Controller
         $this->load->view('layouts/main', $data);
     }
 
+    public function create($project_id)
+    {
+        $this->form_validation->set_rules('task_name', 'Task Name', 'trim|required');
+        $this->form_validation->set_rules('task_body', 'Task Description', 'trim|required');
+        $this->form_validation->set_rules('due_date', 'Task Due Date', 'trim|required');
 
-    
-    
-    // your new methods go here
-    
-	
+        if ($this->form_validation->run() == false) {
+            $data['main_view'] = 'tasks/create_task';
+            $this->load->view('layouts/main', $data);
+        } else {
+
+            $data = array(
+                'project_id' => $project_id,
+                'task_name' => $this->input->post('task_name'),
+                'task_body' => $this->input->post('task_body'),
+                'due_date' => $this->input->post('due_date'),
+            );
+
+            if ($this->task_model->create_task($data)) {
+                $this->session->set_flashdata('task_created', 'Your Task has been created');
+
+                redirect("projects/display/" . $project_id);
+            }
+        }
+    }
+
+    public function edit($task_id)
+    {
+        $this->form_validation->set_rules('task_name', 'Task Name', 'trim|required');
+        $this->form_validation->set_rules('task_body', 'Task Description', 'trim|required');
+        $this->form_validation->set_rules('due_date', 'Task Due Date', 'trim|required');
+
+        if ($this->form_validation->run() == false) {
+
+            $data['task_data'] = $this->task_model->get_task($task_id);
+            $data['main_view'] = 'tasks/edit_task';
+            $this->load->view('layouts/main', $data);
+
+        } else {
+
+            $data = array(
+                'task_name' => $this->input->post('task_name'),
+                'task_body' => $this->input->post('task_body'),
+                'due_date' => $this->input->post('due_date'),
+            );
+
+            if ($this->task_model->edit_task($task_id, $data)) {
+                $this->session->set_flashdata('task_updated', 'The Task has been updated');
+
+                redirect("tasks/display/" . $task_id);
+            }
+        }
+    }
+
+    public function mark_complete($task_id)
+    {
+        if($this->task_model->mark_task_complete($task_id)){
+            $this->session->set_flashdata('mark_done', 'The Task has been marked as completed');
+            
+            redirect("tasks/display/" . $task_id);
+        }
+    }
+
+    public function mark_incomplete($task_id)
+    {
+        if($this->task_model->mark_task_incomplete($task_id)){
+            $this->session->set_flashdata('mark_undone', 'The Task has been marked as incompleted');
+
+            redirect("tasks/display/" . $task_id);
+        }
+    }
+
+    public function delete($project_id, $task_id)
+    {
+        if($this->task_model->delete_task($task_id)){
+            $this->session->set_flashdata('task_deleted', 'The Task has been deleted');
+
+            redirect("projects/display/" . $project_id);
+        }
+    }
 }

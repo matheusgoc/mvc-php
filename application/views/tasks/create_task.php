@@ -6,13 +6,13 @@
 
 <div class="form-group">
 	
-<?php echo form_label('task Name'); ?>
+<?php echo form_label('Task Name'); ?>
 
 <?php
 $data = array(
 	'class' => 'form-control',
 	'name' => 'task_name',
-	'placeholder' => 'Enter task Name'
+	'placeholder' => 'Enter Task Name'
 	);
  ?>
 
@@ -21,7 +21,7 @@ $data = array(
 </div>
 
 <div class="form-group">	
-<?php echo form_label('task Description'); ?>
+<?php echo form_label('Task Description'); ?>
 <?php
 
 $data = array(

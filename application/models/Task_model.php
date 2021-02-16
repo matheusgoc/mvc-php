@@ -46,6 +46,7 @@ class Task_model extends CI_Model {
 		$this->db->where('id', $task_id);
 		$this->db->delete('tasks');
 
+		return true;
 	}
 
 	public function mark_task_complete($task_id) {
@@ -67,7 +68,21 @@ class Task_model extends CI_Model {
 		return true;
 
 	}
+
+    public function create_task($data) {
+
+        $insert_query = $this->db->insert('tasks', $data);
+
+        return $insert_query;
+    }
+
+	public function edit_task($task_id, $data) {
+
+		$this->db->where('id', $task_id);
+		$this->db->update('tasks', $data);
+
+		return true;
+	}
 }
 
-
- ?>
+?>
